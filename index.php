@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nuvei PPP Checksum Calculator v2</title>
-<script src="functions.js"></script>
+<script src="functions.js" defer></script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>

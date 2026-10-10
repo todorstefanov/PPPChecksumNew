@@ -324,8 +324,11 @@ async function calculateDeposit() {
     return;
   }
 
-  const params = {};
-  const add = (k, v) => { if (v !== '' && v !== null && v !== undefined) params[k] = v; };
+  const params = Object.create(null);
+  const add = (k, v) => {
+    if (v !== null && v !== undefined && String(v).trim() !== '') params[k] = String(v);
+  };
+  const addFields = fields => fields.forEach(([key, id]) => add(key, val(id)));
 
   add('merchant_id', val('merchantId'));
   add('merchant_site_id', val('merchantSiteId'));
@@ -337,6 +340,7 @@ async function calculateDeposit() {
     if (ut === 'readonlyupo') add('userPaymentOptionId', val('userPaymentOptionId'));
   }
 
+  if (depMode === 'subscription') add('rebillingPlanId', val('planId'));
   add('userid', val('userId'));
 
   const itemDivs = $('itemsContainer').querySelectorAll('.item-row');
@@ -356,10 +360,13 @@ async function calculateDeposit() {
     add(`item_shipping_${itemIdx}`, val(`iship_${n}`));
     add(`item_handling_${itemIdx}`, val(`ihand_${n}`));
     add(`item_tax_${itemIdx}`, val(`itax_${n}`));
-
-    const itaxinc = radioVal(`itaxinc_${n}`); if (itaxinc) add(`item_tax_included_${itemIdx}`, itaxinc);
-    const iopen = radioVal(`iopen_${n}`); if (iopen) add(`item_open_amount_${itemIdx}`, iopen);
-
+    add(`item_short_description_${itemIdx}`, val(`ishortdesc_${n}`));
+    add(`item_long_description_${itemIdx}`, val(`ilongdesc_${n}`));
+    add(`item_image_url_${itemIdx}`, val(`iimgurl_${n}`));
+    add(`item_description_url_${itemIdx}`, val(`idescurl_${n}`));
+    add(`group_id_${itemIdx}`, val(`igroupid_${n}`));
+    add(`item_tax_included_${itemIdx}`, radioVal(`itaxinc_${n}`));
+    add(`item_open_amount_${itemIdx}`, radioVal(`iopen_${n}`));
     add(`item_min_amount_${itemIdx}`, val(`imin_${n}`));
     add(`item_max_amount_${itemIdx}`, val(`imax_${n}`));
   });
@@ -372,10 +379,115 @@ async function calculateDeposit() {
 
   add('currency', val('currency').toUpperCase());
   add('version', version || '4.0.0');
-
   add('time_stamp', val('depTimestamp'));
 
-  /* ✅ FIXED: secret now at FRONT */
+  add('encoding', radioVal('encoding'));
+  add('merchantLocale', val('merchantLocale'));
+  add('payment_method', val('paymentMethod'));
+  add('payment_method_mode', radioVal('pmMode'));
+  add('theme_id', val('themeId'));
+  add('invoice_id', val('invoiceId'));
+  add('merchant_unique_id', val('merchantUniqueId'));
+  add('discount', val('discount'));
+  add('customData', val('customData'));
+  add('webMasterId', val('webMasterId'));
+  add('productId', val('productId'));
+  add('promoCode', val('promoCode'));
+  add('current_balance', val('currentBalance'));
+  add('total_tax', val('totalTax'));
+  add('shipping', val('shipping'));
+  add('handling', val('handling'));
+  add('allow_installments', radioVal('allowInst'));
+  add('max_num_installments', val('maxInstallments'));
+  add('processingChannel', radioVal('procChannel'));
+  add('quick_deposit', radioVal('quickDep'));
+  add('pm_hints', radioVal('pmHints'));
+  add('isNative', radioVal('isNative'));
+
+  addFields([
+    ['suggestedAmount1', 'sugAmt1'],
+    ['suggestedAmount2', 'sugAmt2'],
+    ['suggestedAmount3', 'sugAmt3'],
+    ['email', 'cEmail'],
+    ['country', 'cCountry'],
+    ['first_name', 'cFirstName'],
+    ['last_name', 'cLastName'],
+    ['title', 'cTitle'],
+    ['phone1', 'cPhone1'],
+    ['phone2', 'cPhone2'],
+    ['address1', 'cAddress1'],
+    ['address2', 'cAddress2'],
+    ['city', 'cCity'],
+    ['state', 'cState'],
+    ['zip', 'cZip'],
+    ['personal_id', 'cPersonalId'],
+    ['dateOfBirth', 'cDateOfBirth'],
+    ['currentNumberOfTransactions', 'cTxCount'],
+    ['customerSince', 'cSince'],
+    ['success_url', 'successUrl'],
+    ['error_url', 'errorUrl'],
+    ['pending_url', 'pendingUrl'],
+    ['notify_url', 'notifyUrl'],
+    ['back_url', 'backUrl'],
+    ['appUrl', 'appUrl'],
+    ['shippingFirstName', 'shipFirstName'],
+    ['shippingLastName', 'shipLastName'],
+    ['shippingAddress', 'shipAddress'],
+    ['shippingCity', 'shipCity'],
+    ['shippingCountry', 'shipCountry'],
+    ['shippingZip', 'shipZip'],
+    ['shippingState', 'shipState'],
+    ['shippingCompanyName', 'shipCompany'],
+    ['shippingStreetNumber', 'shipStreetNum'],
+    ['AddressType', 'shipAddressType'],
+    ['shipIndicator', 'shipIndicator'],
+    ['deliveryEmail', 'deliveryEmail'],
+    ['deliveryTimeFrame', 'deliveryTimeFrame'],
+    ['preOrderDate', 'preOrderDate'],
+    ['preOrderInd', 'preOrderInd'],
+    ['reorderItemsInd', 'reorderItemsInd'],
+    ['threeDSChallengeWindowSize', 'threeDSChallengeWindowSize'],
+    ['accountAge', 'accountAge'],
+    ['accountLastChangeDate', 'accountLastChangeDate'],
+    ['accountLastChangeInd', 'accountLastChangeInd'],
+    ['accountRegistrationDate', 'accountRegistrationDate'],
+    ['accountPasswordChangeDate', 'accountPasswordChangeDate'],
+    ['accountResetInd', 'accountResetInd'],
+    ['accountPurchasesCount6M', 'accountPurchasesCount6M'],
+    ['accountAddCardAttempts24H', 'accountAddCardAttempts24H'],
+    ['accountTransactionsCount24H', 'accountTransactionsCount24H'],
+    ['accountTransactionsCount1Y', 'accountTransactionsCount1Y'],
+    ['accountAddressFirstUseDate', 'accountAddressFirstUseDate'],
+    ['accountAddressFirstUseInd', 'accountAddressFirstUseInd'],
+    ['accountNameInd', 'accountNameInd'],
+    ['accountSuspiciousActivityInd', 'accountSuspiciousActivityInd'],
+    ['giftCardAmount', 'giftCardAmount'],
+    ['giftCardCount', 'giftCardCount'],
+    ['giftCardCurrency', 'giftCardCurrency'],
+    ['descriptorMerchantName', 'descName'],
+    ['descriptorMerchantPhone', 'descPhone'],
+    ['customSiteName', 'customSiteName'],
+    ['creditCardDepositAmount', 'ccDepAmt'],
+    ['MaxCreditCardDepositAmount', 'ccMaxDepAmt'],
+    ['withdrawableBalance', 'withdrawableBalance'],
+    ['digitalAssetType', 'digitalAssetType']
+  ]);
+
+  add('existingCustomer', radioVal('existCust'));
+  add('skip_review_tab', radioVal('skipReview'));
+  add('skip_billing_tab', radioVal('skipBilling'));
+
+  document.querySelectorAll('#customFieldsContainer .kv-row').forEach(row => {
+    const key = row.querySelector('select')?.value;
+    const value = row.querySelector('input')?.value;
+    add(key, value);
+  });
+
+  document.querySelectorAll('#freeFormContainer .kv-row').forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    if (inputs[0]?.value.trim()) add(inputs[0].value.trim(), inputs[1]?.value);
+  });
+
   const preHash = secret + Object.values(params).join('');
 
   const checksum = await hashString(preHash, algo);
@@ -402,8 +514,10 @@ async function calculateWithdrawal() {
   const secret = val('secretKey');
   if (!secret) { alert('Please enter your Secret Key.'); return; }
   const algo = radioVal('hashAlgo');
-  const params = {};
-  const add = (k, v) => { if (v !== '' && v !== null && v !== undefined) params[k] = v; };
+  const params = Object.create(null);
+  const add = (k, v) => {
+    if (v !== null && v !== undefined && String(v).trim() !== '') params[k] = String(v);
+  };
 
   add('merchant_id', val('merchantId'));
   add('merchant_site_id', val('merchantSiteId'));
