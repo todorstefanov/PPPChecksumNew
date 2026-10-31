@@ -612,6 +612,32 @@ function closeIframe() {
   $('pppIframe').src = '';
 }
 
+function toggleCardGenerator() {
+  const isOpen = $('cardGeneratorContainer').style.display === 'block';
+  setCardGeneratorOpen(!isOpen);
+}
+
+function closeCardGenerator() {
+  setCardGeneratorOpen(false);
+}
+
+function setCardGeneratorOpen(isOpen) {
+  const container = $('cardGeneratorContainer');
+  const iframe = $('cardGeneratorIframe');
+  const toggle = $('cardGeneratorToggle');
+
+  if (isOpen && !iframe.dataset.loaded) {
+    iframe.src = 'https://stefanovweb.eu/cardgen/';
+    iframe.dataset.loaded = 'true';
+  }
+
+  container.style.display = isOpen ? 'block' : 'none';
+  toggle.setAttribute('aria-expanded', String(isOpen));
+  toggle.textContent = isOpen ? 'Hide Card Generator' : 'Open Card Generator';
+
+  if (isOpen) container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
 function clearDeposit() {
   document.querySelectorAll('#panel-deposit input[type="text"], #panel-deposit input[type="number"]').forEach(e => e.value = '');
   $('itemsContainer').innerHTML = '';

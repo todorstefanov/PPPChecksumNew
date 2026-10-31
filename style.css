@@ -292,6 +292,32 @@
   #iframeContainer { display: none; margin-top: 16px; }
   #iframeContainer iframe { border: none; width: 100%; border-radius: var(--radius-sm); display: block; }
 
+  /* Card generator iframe */
+  .cardgen-card { margin-top: 16px; }
+  .cardgen-description {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.5;
+    margin: -4px 0 14px;
+  }
+  .cardgen-frame-container { display: none; margin-top: 16px; }
+  .cardgen-frame-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .cardgen-frame-note { color: var(--text-muted); font-size: 11px; }
+  .cardgen-frame {
+    display: block;
+    width: 100%;
+    height: 760px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #f1f2f8;
+  }
+
   /* ── Env badge ── */
   .env-indicator {
     font-size: 11px;

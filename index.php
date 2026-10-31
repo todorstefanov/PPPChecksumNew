@@ -801,7 +801,33 @@
         <button class="btn btn-secondary btn-sm" onclick="addFreeFormParam('freeFormContainer')">+ Add Parameter</button>
       </div>
     </div>
-
+    <!-- Card generator iframe -->
+    <div class="card cardgen-card">
+      <div class="card-title">Card Number Generator <span class="badge badge-opt">Test data</span></div>
+      <p class="cardgen-description">Generate a checksum-valid test card number from a BIN, a five-digit PAN, or both.</p>
+      <button
+        class="btn btn-secondary"
+        id="cardGeneratorToggle"
+        type="button"
+        aria-controls="cardGeneratorContainer"
+        aria-expanded="false"
+        onclick="toggleCardGenerator()"
+      >Open Card Generator</button>
+      <div id="cardGeneratorContainer" class="cardgen-frame-container">
+        <div class="cardgen-frame-toolbar">
+          <span class="cardgen-frame-note">Use test card numbers only.</span>
+          <button class="btn btn-secondary btn-sm" type="button" onclick="closeCardGenerator()">Close</button>
+        </div>
+        <iframe
+          id="cardGeneratorIframe"
+          class="cardgen-frame"
+          title="Card number generator"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+          allow="clipboard-write"
+        ></iframe>
+      </div>
+    </div>
     <!-- Calculate -->
     <div class="card">
       <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
